@@ -1,0 +1,9 @@
+{
+  "name": "barrierlab",
+  "version": "0.1.0",
+  "description": "Accessibility audit of a page with the barrierlab rule set: the engine decides, the agent explains, proposes fixes and keeps what was not checked visible.",
+  "author": { "name": "Jörn Seidel", "url": "https://github.com/casoon" },
+  "homepage": "https://github.com/casoon/barrierlab-agent-plugin",
+  "repository": "https://github.com/casoon/barrierlab-agent-plugin",
+  "license": "MIT"
+}

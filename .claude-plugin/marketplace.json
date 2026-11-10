@@ -1,0 +1,14 @@
+{
+  "name": "barrierlab",
+  "description": "Accessibility tooling on the barrierlab rule set.",
+  "owner": {
+    "name": "casoon"
+  },
+  "plugins": [
+    {
+      "name": "barrierlab",
+      "source": "./",
+      "description": "Accessibility audit of a page with the barrierlab rule set."
+    }
+  ]
+}
