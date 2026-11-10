@@ -17,3 +17,5 @@ or the report layout.
   once with position, source line and evidence, counts from the engine summary, unusable inputs
   first, rules that did not run with their reason. `--check` verifies that a finished report still
   names all of them.
+- **Docs:** project site with installation, commands, report and limits at
+  [casoon.github.io/barrierlab-agent-plugin](https://casoon.github.io/barrierlab-agent-plugin/); `examples/` holds the report frames it shows.

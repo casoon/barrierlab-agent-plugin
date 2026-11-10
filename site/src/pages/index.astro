@@ -1,0 +1,155 @@
+---
+import config from 'virtual:casoon-pages/config';
+import {
+  Badge,
+  Badges,
+  BuildOutput,
+  CallToAction,
+  Facts,
+  Faq,
+  Features,
+  Hero,
+  Install,
+  Quickstart,
+  Terminal,
+} from '@casoon/pages-theme/components';
+import Base from '@casoon/pages-theme/layouts/Base.astro';
+import { url } from '@casoon/pages-theme/url';
+import report from '../../../examples/page.report.md?raw';
+import { diagram } from '../diagrams';
+
+// The frame scripts/digest.py prints for examples/page.html; tests/test_digest.py keeps it current.
+const lines = report.split('\n');
+const failed = lines.slice(0, lines.indexOf('## 2. Needs review')).join('\n').trimEnd();
+const summary = lines[2].replace('Engine summary: ', '').split(' · ');
+const failedRules = failed
+  .split('\n')
+  .filter((line) => line.startsWith('### '))
+  .map((line) => `  ${line.slice(4).replaceAll('`', '').split(' · ').slice(0, 2).join('  ')}`);
+const heroOutput = ['Engine summary', ...summary.map((part) => `  ${part}`), '', '1. Failed', ...failedRules].join('\n');
+---
+
+<Base>
+  <Hero
+    title="An accessibility audit your agent cannot talk its way around."
+    lead="A Claude Code plugin on the barrierlab rule set. The engine decides what failed; the agent explains it, proposes the fix as a diff and keeps everything that was not checked on the page."
+  >
+    <Install
+      commands={[
+        { label: 'engine', command: 'cargo install --git https://github.com/casoon/barrierlab-cli' },
+        { label: 'plugin', command: '/plugin marketplace add casoon/barrierlab-agent-plugin' },
+      ]}
+    />
+    <Badges>
+      <Badge>MIT</Badge>
+      <Badge>v{config.version}</Badge>
+      <Badge>Claude Code</Badge>
+      <Badge>WCAG 2.2</Badge>
+    </Badges>
+    <Terminal slot="output" title="/barrierlab:page examples/page.html" dots ansi={heroOutput} />
+  </Hero>
+
+  <Facts
+    items={[
+      { value: '169', label: 'rules in the run on the example page' },
+      { value: '5', label: 'failures, each with line and source' },
+      { value: '23', label: 'findings reported as not checked' },
+      { value: '3', label: 'rules that did not run, with the reason' },
+    ]}
+  />
+
+  <Features
+    heading="What you get"
+    items={[
+      {
+        title: 'Findings the agent cannot edit',
+        body: 'A script builds the frame of the report from the JSON of the engine: every finding once, with rule id, WCAG criteria, line and source. The agent writes below it.',
+      },
+      {
+        title: 'Fixes for your source',
+        body: 'For each failure the agent looks for the file, template or component that produces the element and shows the change as a diff. It does not apply it.',
+      },
+      {
+        title: '“Did not run” is not “passed”',
+        body: 'Rules that need a browser, and stylesheets the engine could not load, stay in the report with the reason the engine gave.',
+      },
+      {
+        title: 'Verified after writing',
+        body: 'When the report is finished, the same script reads it back and names every finding that is no longer in it.',
+      },
+    ]}
+  />
+
+  <section class="flow">
+    <h2>How a run works</h2>
+    <p>
+      Two authors, clearly separated: the engine and a script produce the facts, the agent adds
+      explanation and a plan.
+    </p>
+    <Fragment set:html={diagram('run')} />
+  </section>
+
+  <BuildOutput
+    caption="The “Failed” section of the frame for the example page, as scripts/digest.py prints it. The test suite compares this file with the script’s output."
+    file="examples/page.report.md"
+  >
+    <Terminal ansi={failed} />
+  </BuildOutput>
+
+  <Quickstart
+    lead="From nothing to a first report. The walkthrough is in the documentation."
+    steps={[
+      'Install the engine with <code>cargo install</code> and the plugin from its marketplace.',
+      'Run <code>/barrierlab:doctor</code> to check the setup.',
+      'Run <code>/barrierlab:page</code> on a file or URL and read <code>report.md</code>.',
+    ]}
+  />
+
+  <Faq
+    items={[
+      {
+        q: 'Does the report say whether my page is WCAG conformant?',
+        a: 'No. It names the criteria each finding belongs to and what was not checked. A static run cannot decide conformance, and the plugin does not pretend to.',
+      },
+      {
+        q: 'Can the agent hide or downgrade a finding?',
+        a: 'The command forbids it, and the check after writing fails when the key of a finding or the id of a rule that did not run is missing from the report.',
+      },
+      {
+        q: 'Does it change my code?',
+        a: 'No. Fixes are shown as diffs. The command writes only its two report files under .barrierlab/runs/.',
+      },
+      {
+        q: 'Does it need a browser?',
+        a: 'No. The engine analyses HTML and CSS statically. What only a browser can show is listed as not checked.',
+      },
+    ]}
+  />
+
+  <CallToAction
+    title="Audit your first page."
+    href={url('docs/getting-started/installation/')}
+    label="Install the plugin"
+  />
+</Base>
+
+<style>
+  .flow {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+  .flow h2 {
+    margin: 0 0 12px;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .flow p {
+    max-width: 60ch;
+    margin: 0;
+  }
+  .flow :global(.cl-surface) {
+    max-width: 760px;
+  }
+</style>

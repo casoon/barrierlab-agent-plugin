@@ -1,2 +1,5 @@
 __pycache__/
 .barrierlab/
+site/node_modules/
+site/dist/
+site/.astro/

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "type": "flow",
+  "title": "One run of /barrierlab:page",
+  "description": "The engine audits the page and writes report.json. digest.py arranges it into a fixed frame, the agent writes explanations and a plan below it, and digest.py --check confirms that every finding and every rule that did not run is still named in report.md.",
+  "source": "commands/page.md, scripts/digest.py",
+  "width": 760,
+  "height": 760,
+  "flow": {
+    "nodes": [
+      { "id": "page", "label": "Page", "sublabel": "URL or HTML file", "kind": "start" },
+      { "id": "engine", "label": "barrierlab --json", "sublabel": "decides every outcome", "kind": "io" },
+      { "id": "frame", "label": "digest.py", "sublabel": "fixed four-section frame" },
+      { "id": "agent", "label": "Agent", "sublabel": "explains, proposes diffs" },
+      { "id": "check", "label": "digest.py --check", "sublabel": "anything lost?", "kind": "decision" },
+      { "id": "report", "label": "report.md", "sublabel": "next to report.json", "kind": "end" }
+    ],
+    "edges": [
+      { "from": "page", "to": "engine" },
+      { "from": "engine", "to": "frame", "label": "report.json" },
+      { "from": "frame", "to": "agent" },
+      { "from": "agent", "to": "check" },
+      { "from": "check", "to": "report", "label": "all named" },
+      { "from": "check", "to": "agent", "label": "missing keys", "dash": "dashed" }
+    ],
+    "mainPath": ["page", "engine", "frame", "agent", "check", "report"],
+    "orientation": "portrait"
+  }
+}

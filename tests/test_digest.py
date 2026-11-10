@@ -68,6 +68,14 @@ class Digest(unittest.TestCase):
         self.assertIn("stylesheet_unavailable: `site.css`", text)
         self.assertLess(text.index("## Inputs the engine could not use"), text.index("## 1. Failed"))
 
+    def test_the_example_reports_are_the_digest_output(self):
+        """examples/*.report.md is what the project site shows."""
+        for name in ("page", "linked"):
+            source = f"examples/{name}.html"
+            lines = (ROOT / source).read_text(encoding="utf-8").split("\n")
+            expected = digest.digest(load(f"{name}.json"), lines, source) + "\n"
+            self.assertEqual((ROOT / "examples" / f"{name}.report.md").read_text(encoding="utf-8"), expected, name)
+
 
 if __name__ == "__main__":
     unittest.main()
