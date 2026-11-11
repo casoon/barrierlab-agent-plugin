@@ -19,3 +19,8 @@ or the report layout.
   names all of them.
 - **Docs:** project site with installation, commands, report and limits at
   [casoon.github.io/barrierlab-agent-plugin](https://casoon.github.io/barrierlab-agent-plugin/); `examples/` holds the report frames it shows.
+
+### Changed
+
+- **Pages:** the project site uses the current shared theme (0.12.8).
+
