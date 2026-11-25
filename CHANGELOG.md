@@ -22,5 +22,5 @@ or the report layout.
 
 ### Changed
 
-- **Pages:** the project site uses the current shared theme (0.17.0).
+- **Pages:** the project site uses the current shared theme (0.18.0).
 
